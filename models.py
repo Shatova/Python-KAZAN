@@ -16,5 +16,5 @@ class Message(BaseModel):
     message_id = peewee.BigIntegerField(index=True)
     chat_id = peewee.BigIntegerField(index=True)
     text = peewee.TextField()
-    tg_id = peewee.BigIntegerField()
+    user = peewee.ForeignKeyField(User, Bakcreaf=Messages)
 
