@@ -20,9 +20,7 @@ import config
 
 import models
 
-c = 0
-
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, updater
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -60,7 +58,7 @@ def smt(update, context):
 def save(update, context):
     msg: telegram.Message = update.message
 
-    models.User.get_or_create(
+    user, created = models.User.get_or_create(
         tg_id=msg.from_user.id,
         defaults={
             'full_name': msg.from_user.full_name
@@ -71,7 +69,7 @@ def save(update, context):
         message_id=msg.message_id,
         chat_id=msg.chat_id,
         text=msg.text,
-        user=telegram.user.id
+        user=user.id
     )
 
 
@@ -91,7 +89,7 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
-def main() -> object:
+def main():
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -119,15 +117,17 @@ def main() -> object:
     # Run the bot until you press Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
+
+    if config.HEROKU_APP_NAME is None:
+        updater.start_polling()
+    else:
+        updater.start_webhook(listen="0,0,0,0",
+                              port=config.PORT,
+                              url_path=config.TOKEN)
+        updater.bot.set_webhook(f"htps://{config.HEROKU_APP_NAME}.herokuapp.com/{config.TOKEN}")
+
     updater.idle()
 
-if config.HEROKU_APP_NAME is None:
-    updater.start_polling()
-else:
-    updater.start_webhook(listen="0,0,0,0"),
-        port= config.PORT,
-        url_path=config.TOKEN)
-    updater.bot.set_webhook(f"htps://{config.HEROKU_APP_NAME}.herokuapp.com/{config.TOKEN}")
 
 if __name__ == '__main__':
     main()
