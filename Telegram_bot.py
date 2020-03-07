@@ -48,7 +48,6 @@ def run_with(update, context):
     c += 1
     update.message.reply_text('well_done')
 
-
 def smt(update, context):
     global c
     c = 0
