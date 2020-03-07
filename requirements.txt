@@ -5,6 +5,7 @@ cryptography==2.8
 decorator==4.4.2
 future==0.18.2
 idna==2.9
+psycopg2-binary==2.8.4
 peewee==3.13.1
 pycparser==2.20
 pyTelegramBotAPI==3.6.7
