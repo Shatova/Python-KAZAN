@@ -40,20 +40,6 @@ def help(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text('Help!')
 
-
-def run_with(update, context):
-    global c
-    for x in range(11):
-        update.message.reply_text(x)
-    c += 1
-    update.message.reply_text('well_done')
-
-def smt(update, context):
-    global c
-    c = 0
-    update.message.reply_text('teper c = 0')
-
-
 def save(update, context):
     msg: telegram.Message = update.message
 
